@@ -58,6 +58,10 @@ class Terrain:
         self.tot_rows = int(cfg.num_rows * self.length_per_env_pixels) + 2 * self.border
 
         self.height_field_raw = np.zeros((self.tot_rows , self.tot_cols), dtype=np.int16)
+        # print(f'###################################')
+        # print(f'self.tot_rows = {self.tot_rows}')
+        # print(f'self.tot_cols = {self.tot_cols}')
+        # print(f'###################################')
         if cfg.curriculum:
             self.curiculum()
         elif cfg.selected:

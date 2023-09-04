@@ -30,13 +30,14 @@
 
 from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobotCfgPPO
 
-class AnymalCRoughCfg( LeggedRobotCfg ):
+class AnymalCHLCCfg( LeggedRobotCfg ):
     class env( LeggedRobotCfg.env ):
         num_envs = 2
         num_actions = 12
 
     class terrain( LeggedRobotCfg.terrain ):
-        mesh_type = 'trimesh'
+        # mesh_type = 'trimesh'
+        mesh_type = 'plane'
 
     class init_state( LeggedRobotCfg.init_state ):
         pos = [0.0, 0.0, 0.6] # x,y,z [m]

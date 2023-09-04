@@ -209,6 +209,12 @@ class LeggedRobot(BaseTask):
     def compute_observations(self):
         """ Computes observations
         """
+        # print(f'##########################')
+        # print(f'type(self.commands) = {type(self.commands)}')
+        # print(f'self.commands = {self.commands}')
+        # print(f'self.commands[:, :3] = {self.commands[:, :3]}')
+        # print(f'##########################')
+        
         self.obs_buf = torch.cat((  self.base_lin_vel * self.obs_scales.lin_vel,
                                     self.base_ang_vel  * self.obs_scales.ang_vel,
                                     self.projected_gravity,
@@ -327,6 +333,12 @@ class LeggedRobot(BaseTask):
         if self.cfg.commands.heading_command:
             forward = quat_apply(self.base_quat, self.forward_vec)
             heading = torch.atan2(forward[:, 1], forward[:, 0])
+            # print(f'#################################################')
+            # print(f'self.commands = {self.commands[:, 2]}')
+            # print(f'self.commands[:, 3] = {self.commands[:, 3]}')
+            # print(f'heading = {heading}')
+            # print(f'self.commands[:, 2] = {self.commands[:, 2]}')
+            # print(f'#################################################')
             self.commands[:, 2] = torch.clip(0.5*wrap_to_pi(self.commands[:, 3] - heading), -1., 1.)
 
         if self.cfg.terrain.measure_heights:
@@ -587,6 +599,8 @@ class LeggedRobot(BaseTask):
         hf_params.nbColumns = self.terrain.tot_rows 
         hf_params.transform.p.x = -self.terrain.cfg.border_size 
         hf_params.transform.p.y = -self.terrain.cfg.border_size
+        # hf_params.transform.p.x = 0.0
+        # hf_params.transform.p.y = 0.0
         hf_params.transform.p.z = 0.0
         hf_params.static_friction = self.cfg.terrain.static_friction
         hf_params.dynamic_friction = self.cfg.terrain.dynamic_friction
@@ -796,6 +810,12 @@ class LeggedRobot(BaseTask):
             points = quat_apply_yaw(self.base_quat[env_ids].repeat(1, self.num_height_points), self.height_points[env_ids]) + (self.root_states[env_ids, :3]).unsqueeze(1)
         else:
             points = quat_apply_yaw(self.base_quat.repeat(1, self.num_height_points), self.height_points) + (self.root_states[:, :3]).unsqueeze(1)
+
+        # print('####################################')
+        # print(f'self.height_points = {self.height_points}')
+        # print(f'self.height_samples = {self.height_samples}')
+        # print(f'(self.root_states[:, :3]).unsqueeze(1) = {(self.root_states[:, :3]).unsqueeze(1)}')
+        # print('####################################')
 
         points += self.terrain.cfg.border_size
         points = (points/self.terrain.cfg.horizontal_scale).long()
